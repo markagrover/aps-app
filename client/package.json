@@ -1,0 +1,74 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": {
+    "/auth/google": {
+      "target": "http://localhost:5000"
+    },
+    "/api/*": {
+      "target": "http://localhost:5000"
+    }
+  },
+  "dependencies": {
+    "axios": "^0.16.2",
+    "materialize-css": "^0.100.2",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-redux": "^5.0.6",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.0.13",
+    "react-toolbox": "^2.0.0-beta.12",
+    "react-toolbox-themr": "^1.0.2",
+    "redux": "^3.7.2",
+    "redux-form": "^7.1.0",
+    "redux-thunk": "^2.2.0"
+  },
+  "scripts": {
+    "toolbox": "react-toolbox-themr",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "reactToolbox": {
+    "include": [
+      "APP_BAR",
+      "AUTOCOMPLETE",
+      "AVATAR",
+      "BUTTON",
+      "CARD",
+      "CHIP",
+      "CHECKBOX",
+      "DATE_PICKER",
+      "DIALOG",
+      "DRAWER",
+      "DROPDOWN",
+      "INPUT",
+      "LAYOUT",
+      "LINK",
+      "LIST",
+      "MENU",
+      "NAVIGATION",
+      "OVERLAY",
+      "PROGRESS_BAR",
+      "RADIO",
+      "RIPPLE",
+      "SLIDER",
+      "SNACKBAR",
+      "SWITCH",
+      "TABLE",
+      "TABS",
+      "TOOLTIP",
+      "TIME_PICKER"
+    ],
+    "customProperties": {
+      "animation-duration": "0.3s",
+      "color-accent": "var(--palette-pink-a200)",
+      "color-accent-dark": "var(--palette-pink-700)",
+      "color-primary-contrast": "var(--color-dark-contrast)",
+      "color-accent-contrast": "var(--color-dark-contrast)"
+    },
+    "output": "src/assets/react-toolbox"
+  }
+}

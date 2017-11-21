@@ -1,0 +1,46 @@
+{
+  "name": "code-journal-sandbox",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "engines": {
+    "node": "8.5.0",
+    "npm": "5.3.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "server": "nodemon index.js",
+    "client": "npm run start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client \" \"npm run webhook\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
+    "webhook": "lt -p 5000 -s austingrover85"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/markagrover/react-code-journal-sandbox.git"
+  },
+  "keywords": [],
+  "author": "Mark grover <markagrover85@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/markagrover/react-code-journal-sandbox/issues"
+  },
+  "homepage": "https://github.com/markagrover/react-code-journal-sandbox#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "concurrently": "^3.5.0",
+    "cookie-session": "^1.3.1",
+    "express": "^4.15.4",
+    "localtunnel": "^1.8.3",
+    "lodash": "^4.17.4",
+    "mongoose": "^4.11.11",
+    "nodemon": "^1.12.1",
+    "passport": "^0.4.0",
+    "passport-google-oauth20": "^1.0.0",
+    "path-parser": "^2.0.2",
+    "react-toolbox": "^2.0.0-beta.12",
+    "react-toolbox-themr": "^1.0.2",
+    "sendgrid": "^5.2.3",
+    "stripe": "^5.1.1"
+  }
+}
