@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_TEST, FETCH_TODOS, FETCH_USER } from './types';
+import { FETCH_TEST, FETCH_TODOS, FETCH_USER, FETCH_CLIENTS, FETCH_CLIENT, DELETE_CLIENT, UPDATE_CLIENT, CREATE_CLIENT , EDIT_CLIENT, CREATE_VENDOR, FETCH_VENDORS, EDIT_VENDOR, FETCH_VENDOR} from './types';
 
 export const fetchUser = () => async dispatch => dispatch({ type: FETCH_USER, payload: await axios.get('/api/current_user') });
 
@@ -19,3 +19,154 @@ export const fetchTodos = () => {
         return dispatch({ type: FETCH_TODOS, payload: res });
     }
 };
+
+export const fetchClient = (id) => {
+    return async dispatch => {
+        const res = await axios.get(`/api/clients/${id}`);
+        console.log("res",res);
+        return dispatch({ type: FETCH_CLIENT, payload: res });
+    }
+};
+
+export const fetchClients = () => {
+    return async dispatch => {
+        const res = await axios.get('/api/clients');
+        console.log("res",res);
+        return dispatch({ type: FETCH_CLIENTS, payload: res });
+    }
+};
+
+export const createClient = (values) => {
+    let {fName, lName, email, city, phone, houseNumber,vendor, street, state, zipcode} = values;
+    const newClient = {
+        fName: fName,
+        lName: lName,
+        phone: phone,
+        email: email,
+        vendor : vendor,
+        address: {
+           houseNumber: houseNumber,
+            street: street,
+            city: city,
+            state: state,
+            zipcode: zipcode
+        }
+    };
+
+    return async dispatch => {
+        const res = await axios.post('/api/clients', newClient);
+        console.log("res",res);
+        return dispatch({ type: CREATE_CLIENT, payload: res });
+    }
+};
+
+export const editClient = (id) => {
+    return async dispatch => {
+        const res = await axios.get(`/api/clients/${id}`);
+        console.log("res",res);
+        let {fName,lName,email,phone,address} = res.data;
+        let {houseNumber, street, city, state, zipcode} = address;
+        const editValue = {fName,lName,email,phone, houseNumber, street, city, state, zipcode};
+        return dispatch({ type: EDIT_CLIENT, payload: editValue });
+    }
+};
+
+export const updateClient = (values, id) => {
+    return async dispatch => {
+        const res = await axios.get('/api/clients');
+        console.log("res",res);
+        return dispatch({ type: UPDATE_CLIENT, payload: res });
+    }
+};
+
+export const deleteClient = (id) => {
+    return async dispatch => {
+        const res = await axios.delete('/api/clients',id);
+        console.log("res",res);
+        return dispatch({ type: DELETE_CLIENT, payload: res });
+    }
+};
+
+export const createJob = (values) => {
+    const newJob = {
+        fName: values.fName,
+        lName: values.lName,
+        phone: values.hPhone,
+        email: values.email,
+        address: values.address
+    };
+    return async dispatch => {
+        const res = await axios.post('/api/jobs', newJob);
+        console.log("res",res);
+        return dispatch({ type: CREATE_CLIENT, payload: res });
+    }
+};
+
+export const editJob = (id) => {
+    return async dispatch => {
+        const res = await axios.get(`/api/jobs/${id}`);
+        console.log("res",res);
+        return dispatch({ type: EDIT_CLIENT, payload: res });
+    }
+};
+
+export const updateJob = (values, id) => {
+    return async dispatch => {
+        const res = await axios.get('/api/jobs');
+        console.log("res",res);
+        return dispatch({ type: UPDATE_CLIENT, payload: res });
+    }
+};
+
+export const deleteJob = (id) => {
+    return async dispatch => {
+        const res = await axios.delete('/api/jobs',id);
+        console.log("res",res);
+        return dispatch({ type: DELETE_CLIENT, payload: res });
+    }
+};
+
+export const createVendor = (values) => {
+    let {company, email, phone, website,houseNumber, street, city, state, zipcode} = values;
+    let address = {
+        houseNumber, street, city, state, zipcode
+    };
+    const data = {
+        company, email, phone, website,
+        address
+    };
+    return async dispatch => {
+        const res = await axios.post('/api/vendors', data);
+        console.log("res",res);
+        return dispatch({ type: CREATE_VENDOR, payload: res });
+    }
+};
+
+export const fetchVendors = () => {
+    return async dispatch => {
+        const res = await axios.get('/api/vendors');
+        console.log("res",res);
+        return dispatch({ type: FETCH_VENDORS, payload: res });
+    }
+}
+
+
+export const editVendor = (id) => {
+    return async dispatch => {
+        const res = await axios.get(`/api/vendors/edit/${id}`);
+        console.log("response",res);
+        let {company,email,phone,address,website} = res.data;
+        let {houseNumber, street, city, state, zipcode} = address;
+        const editValue = {company,email,phone, houseNumber, street, city, state, zipcode, website};
+        return dispatch({ type: EDIT_VENDOR, payload: editValue });
+    }
+}
+
+export const fetchVendor = (id) => {
+    return async dispatch => {
+        const res = await axios.get(`/api/vendors/${id}`);
+        return dispatch({type: FETCH_VENDOR, payload: res});
+    }
+}
+
+

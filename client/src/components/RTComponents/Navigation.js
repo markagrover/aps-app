@@ -17,8 +17,9 @@ const MGNavigation = ({location, history}) => {
             <Navigation type='horizontal' actions={actions} />
             <Navigation type='vertical'>
                 <LinkWrap label={'HOME'} onClick={(location) => history.push('/')}></LinkWrap>
-                <LinkWrap label={'TODOS'} onClick={(location) => history.push('/todos')}></LinkWrap>
-                <LinkWrap label={'TEST'} onClick={(location) => history.push('/test')}></LinkWrap>
+                <LinkWrap label={'JOBS'} onClick={(location) => history.push('/jobs')}></LinkWrap>
+                <LinkWrap label={'CLIENTS'} onClick={(location) => history.push('/clients')}></LinkWrap>
+                <LinkWrap label={'Vendors'} onClick={(location) => history.push('/vendors')}></LinkWrap>
             </Navigation>
         </div>
     );

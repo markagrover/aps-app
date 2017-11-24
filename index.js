@@ -9,6 +9,10 @@ const todoRoutes = require("./routes/todos");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const logoutRoute = require("./routes/logoutRoute");
+const clientRoute = require("./routes/clientRoutes");
+const jobRoute = require("./routes/jobRoutes");
+const vendorRoute = require("./routes/vendorRoutes");
+
 mongoose.promise = global.promise;
 const app = express();
 require("./services/passport");
@@ -16,8 +20,8 @@ require("./services/passport");
 // set the debug so we can see the errors in the console.
 mongoose.set("debug", true);
 
-// connect to mongodb NOTE: we can name our db anything. this one is 'todo-api'
-mongoose.connect("mongodb://localhost/todo-api");
+// connect to mongodb NOTE: we can name our db anything. this one i
+//mongoose.connect("mongodb://localhost/aps-app-dev");
 //Body Parser Config
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -40,6 +44,9 @@ app.use("/auth/google", authRoutes);
 app.use("/api/todos", todoRoutes);
 app.use("/api/current_user", userRoutes);
 app.use("/api/logout", logoutRoute);
+app.use("/api/clients", clientRoute);
+app.use("/api/jobs", jobRoute);
+app.use("/api/vendors", vendorRoute);
 
 // dirty generic example
 app.get("/api/test", (req, res) => {

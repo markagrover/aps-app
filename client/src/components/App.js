@@ -4,8 +4,15 @@ import { connect } from "react-redux";
 import * as actions from "../actions";
 import MainLayout from '../components/layouts/MainLayout';
 import { BrowserRouter } from 'react-router-dom';
-import Todos from './Todos';
-import Test from './Test';
+import NewClientForm from '../container/NewClient';
+import NewVendorForm from '../container/NewVendor';
+import NewJobForm from '../container/NewJob';
+import ClientsView from '../container/Clients';
+import ClientView from '../container/Client';
+import EditClientsView from '../components/forms/Client/Update';
+import EditVendorsView from '../components/forms/Vendor/Update';
+import Vendors from '../container/Vendors';
+import VendorView from '../container/Vendor';
 
 class App extends Component {
   constructor(props) {
@@ -14,20 +21,26 @@ class App extends Component {
     this.state = {};
   }
   componentDidMount() {
-    this.props.fetchTest();
-    this.props.fetchTodos();
-    this.props.fetchUser();
+      this.props.fetchClients();
   }
   render() {
       // Add new routes here and pass in components.
     return (
       <BrowserRouter>
-        <MainLayout MGRouter={<MGRouter
-            routes={{
-                "/": () => <h1>Landing...</h1>,
-                "/todos": Todos  ,
-                "/test": Test
-            }} />
+        <MainLayout
+            MGRouter={
+                <MGRouter
+                    routes={{
+                        "/": () => <h1>Landing...</h1>,
+                        "/clients": ClientsView,
+                        "/vendors": Vendors,
+                        "/jobs/new": NewJobForm,
+                        "/vendors/new": NewVendorForm,
+                        "/clients/new": NewClientForm,
+                        "/clients/:clientId": ClientView,
+                        "/vendors/:vendorId": VendorView,
+                        "/clients/edit/:clientId": EditClientsView,
+                        "/vendors/edit/:vendorId": EditVendorsView,}} />
             }/>
       </BrowserRouter>
     );
