@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_TEST, FETCH_TODOS, FETCH_USER, FETCH_CLIENTS, FETCH_CLIENT, DELETE_CLIENT, UPDATE_CLIENT, CREATE_CLIENT , EDIT_CLIENT, CREATE_VENDOR, FETCH_VENDORS, EDIT_VENDOR, FETCH_VENDOR} from './types';
+import { FETCH_TEST, FETCH_TODOS, FETCH_USER, FETCH_CLIENTS, FETCH_CLIENT, DELETE_CLIENT, UPDATE_CLIENT, CREATE_CLIENT , EDIT_CLIENT, CREATE_VENDOR, FETCH_VENDORS, EDIT_VENDOR, FETCH_VENDOR, CREATE_JOB} from './types';
 
 export const fetchUser = () => async dispatch => dispatch({ type: FETCH_USER, payload: await axios.get('/api/current_user') });
 
@@ -23,8 +23,8 @@ export const fetchTodos = () => {
 export const fetchClient = (id) => {
     return async dispatch => {
         const res = await axios.get(`/api/clients/${id}`);
-        console.log("res",res);
-        return dispatch({ type: FETCH_CLIENT, payload: res });
+        console.log("res fetch client",res);
+        return dispatch({ type: FETCH_CLIENT, payload: res.data });
     }
 };
 
@@ -87,18 +87,22 @@ export const deleteClient = (id) => {
     }
 };
 
-export const createJob = (values) => {
-    const newJob = {
-        fName: values.fName,
-        lName: values.lName,
-        phone: values.hPhone,
-        email: values.email,
-        address: values.address
+export const createJob = (vendorId, clientId, values) => {
+    let requestData = {};
+    const {type, startDate, houseNumber, street, city, state, zipcode} = values;
+    requestData.job = {
+        type,
+        startDate
     };
+    requestData.job.address = { houseNumber, street, city, state, zipcode};
     return async dispatch => {
-        const res = await axios.post('/api/jobs', newJob);
-        console.log("res",res);
-        return dispatch({ type: CREATE_CLIENT, payload: res });
+        const clientRes = await axios.post(`/api/vendors/${vendorId}/clients/${clientId}/jobs`, requestData);
+        const vendorRes = await axios.get(`/api/vendors/${vendorId}`);
+        console.log("clientRes",clientRes);
+        fetchVendor(vendorId);
+        return dispatch({ type: CREATE_JOB, payload: clientRes });
+
+
     }
 };
 
@@ -168,5 +172,11 @@ export const fetchVendor = (id) => {
         return dispatch({type: FETCH_VENDOR, payload: res});
     }
 }
+
+
+
+
+
+
 
 

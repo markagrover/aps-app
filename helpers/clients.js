@@ -4,12 +4,12 @@ exports.getClients = function(req, res) {
     // todo create a record obj to claer up bugs on key / data assignment
     db.Client
         .find()
-        .then(function(clients) {
+        .populate('jobs')
+        .exec(function(err, clients) {
+            if(err) console.error(err);
             res.json(clients);
         })
-        .catch(function(err) {
-            res.send(err);
-        });
+
 };
 
 exports.createClient = function(req, res) {
@@ -18,6 +18,7 @@ exports.createClient = function(req, res) {
         .then(function() {
             db.Client
                 .find()
+                .populate('jobs')
                 .then(function(clients){
                     res.send(clients);
                 });
@@ -30,10 +31,12 @@ exports.createClient = function(req, res) {
 exports.getClient = function(req, res) {
     db.Client
         .findById(req.params.clientId)
-        .then(function(todo) {
-            res.json(todo);
+        .populate('jobs')
+        .exec(function(err, client) {
+            if(err) console.error(err);
+            res.json(client);
         })
-        .catch(function(err) {
+        .catch(function(err){
             res.send(err);
         });
 };

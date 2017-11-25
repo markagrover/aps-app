@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import * as actions from '../actions';
 import { connect } from 'react-redux';
 import Button from 'react-toolbox/lib/button/Button';
+import NewJobForm from '../components/forms/Job/New';
+import JobRoll from '../components/Jobs/JobRoll';
 
 
 class SingleClientView extends Component {

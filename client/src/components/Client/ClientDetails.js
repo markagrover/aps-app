@@ -1,4 +1,6 @@
 import React from 'react';
+import NewJobForm from '../forms/Job/New';
+import JobRoll from '../Jobs/JobRoll';
 
 const Details = ({fName,lName,address,phone,email}) => {
     return (

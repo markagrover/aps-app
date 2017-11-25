@@ -14,19 +14,6 @@ const renderInputField = ({ input, meta, ...props }) => (
         error={ meta.touched && meta.error } />
 );
 
-const renderSelectField = ({ input, meta, source, ...props }) => (
-    <Dropdown /*due to Dropdowns required proptype for error is String huh....*/
-        source={ source }
-        { ...input }
-        { ...props }
-        error={ '' && meta.touched && meta.error } />
-);
-
-const vendorSource = [{ value: 'none', label: 'NONE' },
-    { value: 'apollo', label: 'APOLLO'},
-    { value: 'pnp', label: 'POOL_N_PLAY' },
-    { value: 'pplus', label: 'POOLS_PLUS'}];
-
 let UpdateJob = () => (
     <form style={{
         width: '50%',

@@ -1,7 +1,7 @@
 const db = require("../models");
 
 exports.getJobs = function(req, res) {
-    db.Jobs
+    db.Job
         .find()
         .then(function(jobs) {
             res.json(jobs);
@@ -13,6 +13,8 @@ exports.getJobs = function(req, res) {
 
 exports.createJob = function(req, res) {
     const isNote = req.body.note;
+    const owner = req.body.clientId;
+
     let job;
     let note;
     db.Job

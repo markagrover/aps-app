@@ -11,3 +11,4 @@ export const CREATE_VENDOR = 'create_vendor';
 export const FETCH_VENDORS = 'fetch_vendors';
 export const EDIT_VENDOR = 'edit_vendor';
 export const FETCH_VENDOR = 'fetch_vendor';
+export const CREATE_JOB = 'create_job';

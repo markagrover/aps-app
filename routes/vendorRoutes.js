@@ -17,5 +17,11 @@ router
     .get(helpers.getVendor)
     .put(helpers.updateVendor)
     .delete(helpers.deleteVendor);
+router
+    .route("/:vendorId/clients/:clientId/jobs")
+    .post(helpers.createJob)
+    .get(helpers.getVendor)
+    .put(helpers.updateVendor)
+    .delete(helpers.deleteVendor);
 
 module.exports = router;

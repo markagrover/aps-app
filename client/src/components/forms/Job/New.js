@@ -14,16 +14,12 @@ const renderInputField = ({ input, meta, ...props }) => (
 
 const renderSelectField = ({ input, meta, source, ...props }) => (
     <Dropdown /*due to Dropdowns required proptype for error is String huh....*/
-        source={ source }
-        { ...input }
-        { ...props }
-        error={ '' && meta.touched && meta.error } />
+        source={source}
+        {...input}
+        {...props}
+        error={"" && meta.touched && meta.error}
+    />
 );
-
-const vendorSource = [{ value: 'none', label: 'NONE' },
-    { value: 'apollo', label: 'APOLLO'},
-    { value: 'pnp', label: 'POOL_N_PLAY' },
-    { value: 'pplus', label: 'POOLS_PLUS'}];
 
 let NewJob = (props) => {
     const {handleSubmit, onSubmit} = props;
@@ -33,11 +29,41 @@ let NewJob = (props) => {
         margin: '0 auto'
     }} className={'row'}>
         <div>
-            <Field name="type" component={renderInputField} label="Job Type"/>
+            <Field name="type" source={[{label:'Above Ground Round', value: 1}, {label: 'Above Ground Oval',value: 2},{label: 'Semi-In-ground Round', value: 3},{label: 'Semi-In-ground FreeForm',value: 4}, {label: 'Semi-In-ground Oval', value: 5}, {label: 'Semi-In-ground Rectangle',value: 6}, {label: 'In-ground Rectangle', value: 7}, {label: 'In-ground FreeForm', value: 8},{label: 'Liner Replacement Above Ground', value: 9}, {label: 'Liner Replacement In-Ground',value: 10}, {label: 'Liner Replacement Semi-In-ground', value: 11}]} component={renderSelectField} label="Job Type"/>
         </div>
-        <div>
-            <Field name="location" component={renderInputField} label="Job Location"/>
-        </div>
+       <div>
+           <Field
+               name="houseNumber"
+               component={renderInputField}
+               label={"House Number"}
+           />
+       </div>
+       <div>
+           <Field
+               name="street"
+               component={renderInputField}
+               label={"Street"}
+           />
+       </div>
+       <div>
+           <Field
+               name="city"
+               component={renderInputField}
+               label={"City"} />
+       </div>
+       <div>
+           <Field
+               name="state"
+               component={renderInputField}
+               label={"State"} />
+       </div>
+       <div>
+           <Field
+               name="zipcode"
+               component={renderInputField}
+               label={"Postal Code"}
+           />
+       </div>
         <div>
             <Field name="startDate" component={renderInputField} label="Start Date"/>
         </div>

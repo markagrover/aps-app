@@ -28,6 +28,7 @@ const vendorSchema = new mongoose.Schema({
         default: true
     },
     clients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Client' }],
+    jobs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Job' }],
     createdDate: {
         type: Date,
         default: Date.now
