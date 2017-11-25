@@ -4,7 +4,13 @@ const db = require("../models");
 exports.getVendors = function(req, res) {
   db.Vendor
     .find()
-    .then(function(vendors) {
+    .populate({
+        path: 'clients',
+        populate: {path: 'jobs'}
+    })
+    .populate('jobs')
+    .exec(function(err, vendors) {
+      if(err) console.error(err);
       console.log("VENDORS=>", vendors);
       res.json(vendors);
     })
@@ -28,23 +34,48 @@ exports.createVendor = function(req, res) {
 
 exports.getVendor = function(req, res) {
   let response = {};
-  db.Vendor.findOne({ _id: req.params.vendorId }, function(err, vendor) {
-    if (err) console.err(err);
-    response.vendor = vendor;
-    db.Client.find({ vendor: req.params.vendorId }, function(err, clients) {
-      if (err) console.error(err);
-      response.clients = clients;
-      res.json(response);
-    });
-  });
+  db.Vendor
+      .findOne({ _id: req.params.vendorId })
+      .populate('jobs')
+      .populate({
+          path: 'clients',
+          populate: {path: 'jobs'}
+      })
+      .exec(function(err, vendor){
+        if(err) console.error(err);
+        response.vendor = vendor;
+      })
+      .then(function(){
+          db.Client
+              .find({ vendor: req.params.vendorId })
+              .populate('jobs')
+              .exec(function(err, clients){
+                  if(err) console.error(err);
+                  response.clients = clients;
+                  res.json(response);
+              })
+      })
+      .catch(function(err){
+        console.error(err);
+      });
 };
 
 exports.getVendorOnly = function(req, res) {
-  db.Vendor.findOne({ _id: req.params.vendorId }, function(err, vendor) {
-    if (err) console.err(err);
-    console.log("VENDOR=>", vendor);
-    res.json(vendor);
-  });
+    db.Vendor
+        .findOne({ _id: req.params.vendorId })
+        .populate('jobs')
+        .populate('clients')
+        .populate({
+            path: 'clients',
+            populate: {path: 'jobs'}
+        })
+        .exec(function(err, vendor){
+            if(err) console.error(err);
+            res.json(vendor);
+        })
+        .catch(function(err){
+          console.error(err);
+        })
 };
 
 exports.updateVendor = function(req, res) {
@@ -64,37 +95,6 @@ exports.deleteVendor = function(req, res) {
     .remove({ _id: req.body })
     .then(function() {
       res.json({ message: "We Deleted It!" });
-    })
-    .catch(function(err) {
-      res.send(err);
-    });
-};
-
-// create job and update client and vendor with new job.
-exports.createJob = function(req, res) {
-  db.Job
-    .create(req.body.job, function(err, job) {
-
-
-      db.Vendor.findById(req.params.vendorId, function(err, vendor) {
-        vendor.jobs.push(job);
-        vendor.save(function(err, updatedVendor) {
-          if (err) console.error(err);
-          db.Client.findById(req.params.clientId, function(err, client) {
-            if (err) console.error(err);
-            client.jobs.push(job);
-            job.client = client;
-            job.save(function(err, job){
-                if(err) console.error(err);
-                console.log("Job Saved", job);
-            });
-            client.save(function(err, updatedClient) {
-              if (err) console.error(err);
-              res.json({ message: "We created job It!" });
-            });
-          });
-        });
-      });
     })
     .catch(function(err) {
       res.send(err);

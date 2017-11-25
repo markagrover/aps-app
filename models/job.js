@@ -13,7 +13,7 @@ const jobSchema = new mongoose.Schema({
         type: String,
         required: [true, "Job Type can not be blank!"]
     },
-    location: {
+    address: {
         type: addressSchema
     },
     startDate: {

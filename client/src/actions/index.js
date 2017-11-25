@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_TEST, FETCH_TODOS, FETCH_USER, FETCH_CLIENTS, FETCH_CLIENT, DELETE_CLIENT, UPDATE_CLIENT, CREATE_CLIENT , EDIT_CLIENT, CREATE_VENDOR, FETCH_VENDORS, EDIT_VENDOR, FETCH_VENDOR, CREATE_JOB} from './types';
+import { FETCH_TEST, FETCH_TODOS, FETCH_USER, FETCH_CLIENTS, FETCH_CLIENT, DELETE_CLIENT, UPDATE_CLIENT, CREATE_CLIENT , EDIT_CLIENT, CREATE_VENDOR, FETCH_VENDORS, EDIT_VENDOR, FETCH_VENDOR, CREATE_JOB, FETCH_JOB} from './types';
 
 export const fetchUser = () => async dispatch => dispatch({ type: FETCH_USER, payload: await axios.get('/api/current_user') });
 
@@ -95,6 +95,7 @@ export const createJob = (vendorId, clientId, values) => {
         startDate
     };
     requestData.job.address = { houseNumber, street, city, state, zipcode};
+    console.log("req.body.job=>>>",requestData);
     return async dispatch => {
         const clientRes = await axios.post(`/api/vendors/${vendorId}/clients/${clientId}/jobs`, requestData);
         const vendorRes = await axios.get(`/api/vendors/${vendorId}`);
@@ -170,6 +171,13 @@ export const fetchVendor = (id) => {
     return async dispatch => {
         const res = await axios.get(`/api/vendors/${id}`);
         return dispatch({type: FETCH_VENDOR, payload: res});
+    }
+}
+
+export const fetchJob = (id) => {
+    return async dispatch => {
+        const res = await axios.get(`/api/jobs/${id}`);
+        return dispatch({type: FETCH_JOB, payload: res});
     }
 }
 

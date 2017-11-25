@@ -29,7 +29,7 @@ let NewJob = (props) => {
         margin: '0 auto'
     }} className={'row'}>
         <div>
-            <Field name="type" source={[{label:'Above Ground Round', value: 1}, {label: 'Above Ground Oval',value: 2},{label: 'Semi-In-ground Round', value: 3},{label: 'Semi-In-ground FreeForm',value: 4}, {label: 'Semi-In-ground Oval', value: 5}, {label: 'Semi-In-ground Rectangle',value: 6}, {label: 'In-ground Rectangle', value: 7}, {label: 'In-ground FreeForm', value: 8},{label: 'Liner Replacement Above Ground', value: 9}, {label: 'Liner Replacement In-Ground',value: 10}, {label: 'Liner Replacement Semi-In-ground', value: 11}]} component={renderSelectField} label="Job Type"/>
+            <Field name="type" source={[{label:'Above Ground Round', value: 'Above Ground Round'}, {label: 'Above Ground Oval',value: 'Above Ground Oval'},{label: 'Semi-In-ground Round', value: 'Semi-In-ground Round'},{label: 'Semi-In-ground FreeForm',value: 'Semi-In-ground FreeForm'}, {label: 'Semi-In-ground Oval', value: 'Semi-In-ground Oval'}, {label: 'Semi-In-ground Rectangle',value: 'Semi-In-ground Rectangle'}, {label: 'In-ground Rectangle', value: 'In-ground Rectangle'}, {label: 'In-ground FreeForm', value: 'In-ground FreeForm'},{label: 'Liner Replacement Above Ground', value: 'Liner Replacement Above Ground'}, {label: 'Liner Replacement In-Ground',value: 'Liner Replacement In-Ground'}, {label: 'Liner Replacement Semi-In-ground', value: 'Liner Replacement Semi-In-ground'}]} component={renderSelectField} label="Job Type"/>
         </div>
        <div>
            <Field

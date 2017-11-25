@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../models");
 const helpers = require("../helpers/vendors");
+const jobHelpers = require("../helpers/jobs");
 
 router
     .route("/")
@@ -19,7 +20,7 @@ router
     .delete(helpers.deleteVendor);
 router
     .route("/:vendorId/clients/:clientId/jobs")
-    .post(helpers.createJob)
+    .post(jobHelpers.createJob)
     .get(helpers.getVendor)
     .put(helpers.updateVendor)
     .delete(helpers.deleteVendor);

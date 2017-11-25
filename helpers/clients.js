@@ -14,12 +14,25 @@ exports.getClients = function(req, res) {
 
 exports.createClient = function(req, res) {
     db.Client
-        .create(req.body)
-        .then(function() {
+        .create(req.body, function(err, client) {
+            console.log("CLIENT",client);
+            if(err) console.error(err);
+            if(req.body.vendor){
+                db.Vendor
+                    .findOne({_id: req.body.vendor}, function(err, vendor){
+                    console.log('vendor',vendor);
+                        if(err) console.error(err);
+                        vendor.clients.push(client);
+                        vendor.save(function(err, vendor){
+                            if(err) console.error(err);
+
+                        });
+                    });
+            }
             db.Client
                 .find()
                 .populate('jobs')
-                .then(function(clients){
+                .exec(function(clients){
                     res.send(clients);
                 });
         })
