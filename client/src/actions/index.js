@@ -1,5 +1,24 @@
 import axios from 'axios';
-import { FETCH_TEST, FETCH_TODOS, FETCH_USER, FETCH_CLIENTS, FETCH_CLIENT, DELETE_CLIENT, UPDATE_CLIENT, CREATE_CLIENT , EDIT_CLIENT, CREATE_VENDOR, FETCH_VENDORS, EDIT_VENDOR, FETCH_VENDOR, CREATE_JOB, FETCH_JOB} from './types';
+import {
+    FETCH_TEST,
+    FETCH_TODOS,
+    FETCH_USER,
+    FETCH_CLIENTS,
+    FETCH_CLIENT,
+    DELETE_CLIENT,
+    DELETE_JOB,
+    UPDATE_CLIENT,
+    CREATE_CLIENT ,
+    EDIT_CLIENT,
+    CREATE_VENDOR,
+    FETCH_VENDORS,
+    EDIT_VENDOR,
+    EDIT_JOB,
+    FETCH_VENDOR,
+    CREATE_JOB,
+    FETCH_JOB,
+    FETCH_JOBS
+} from './types';
 
 export const fetchUser = () => async dispatch => dispatch({ type: FETCH_USER, payload: await axios.get('/api/current_user') });
 
@@ -20,10 +39,16 @@ export const fetchTodos = () => {
     }
 };
 
+/*
+*
+*    CLIENTS
+*
+* */
+
 export const fetchClient = (id) => {
     return async dispatch => {
         const res = await axios.get(`/api/clients/${id}`);
-        console.log("res fetch client",res);
+        //console.log("res fetch client",res);
         return dispatch({ type: FETCH_CLIENT, payload: res.data });
     }
 };
@@ -31,7 +56,7 @@ export const fetchClient = (id) => {
 export const fetchClients = () => {
     return async dispatch => {
         const res = await axios.get('/api/clients');
-        console.log("res",res);
+        //console.log("res",res);
         return dispatch({ type: FETCH_CLIENTS, payload: res });
     }
 };
@@ -55,7 +80,7 @@ export const createClient = (values) => {
 
     return async dispatch => {
         const res = await axios.post('/api/clients', newClient);
-        console.log("res",res);
+        //console.log("res",res);
         return dispatch({ type: CREATE_CLIENT, payload: res });
     }
 };
@@ -63,7 +88,7 @@ export const createClient = (values) => {
 export const editClient = (id) => {
     return async dispatch => {
         const res = await axios.get(`/api/clients/${id}`);
-        console.log("res",res);
+        //console.log("res",res);
         let {fName,lName,email,phone,address} = res.data;
         let {houseNumber, street, city, state, zipcode} = address;
         const editValue = {fName,lName,email,phone, houseNumber, street, city, state, zipcode};
@@ -74,7 +99,7 @@ export const editClient = (id) => {
 export const updateClient = (values, id) => {
     return async dispatch => {
         const res = await axios.get('/api/clients');
-        console.log("res",res);
+        //console.log("res",res);
         return dispatch({ type: UPDATE_CLIENT, payload: res });
     }
 };
@@ -82,10 +107,17 @@ export const updateClient = (values, id) => {
 export const deleteClient = (id) => {
     return async dispatch => {
         const res = await axios.delete('/api/clients',id);
-        console.log("res",res);
+        //console.log("res",res);
         return dispatch({ type: DELETE_CLIENT, payload: res });
     }
 };
+
+
+/*
+*
+*    JOBS
+*
+* */
 
 export const createJob = (vendorId, clientId, values) => {
     let requestData = {};
@@ -95,11 +127,11 @@ export const createJob = (vendorId, clientId, values) => {
         startDate
     };
     requestData.job.address = { houseNumber, street, city, state, zipcode};
-    console.log("req.body.job=>>>",requestData);
+    //console.log("req.body.job=>>>",requestData);
     return async dispatch => {
         const clientRes = await axios.post(`/api/vendors/${vendorId}/clients/${clientId}/jobs`, requestData);
         const vendorRes = await axios.get(`/api/vendors/${vendorId}`);
-        console.log("clientRes",clientRes);
+        //console.log("clientRes",clientRes);
         fetchVendor(vendorId);
         return dispatch({ type: CREATE_JOB, payload: clientRes });
 
@@ -108,28 +140,53 @@ export const createJob = (vendorId, clientId, values) => {
 };
 
 export const editJob = (id) => {
+
     return async dispatch => {
+        let restructuredRes = {};
         const res = await axios.get(`/api/jobs/${id}`);
-        console.log("res",res);
-        return dispatch({ type: EDIT_CLIENT, payload: res });
+        Object.assign(restructuredRes, res.data, res.data.address);
+        //console.log("res",restructuredRes);
+
+        return dispatch({ type: EDIT_JOB, payload: restructuredRes });
     }
 };
 
 export const updateJob = (values, id) => {
     return async dispatch => {
         const res = await axios.get('/api/jobs');
-        console.log("res",res);
+        //console.log("res",res);
         return dispatch({ type: UPDATE_CLIENT, payload: res });
     }
 };
 
 export const deleteJob = (id) => {
     return async dispatch => {
-        const res = await axios.delete('/api/jobs',id);
-        console.log("res",res);
-        return dispatch({ type: DELETE_CLIENT, payload: res });
+        const res = await axios.delete(`/api/jobs/${id}`);
+        //console.log("res",res);
+        return dispatch({ type: DELETE_JOB, payload: res });
     }
 };
+
+export const fetchJob = (id) => {
+    return async dispatch => {
+        const res = await axios.get(`/api/jobs/${id}`);
+        return dispatch({type: FETCH_JOB, payload: res});
+    }
+};
+
+export const fetchJobs = () => {
+    return async dispatch => {
+        const res = await axios.get(`/api/jobs`);
+        return dispatch({type: FETCH_JOBS, payload: res});
+    }
+};
+
+
+/*
+*
+*    VENDORS
+*
+* */
 
 export const createVendor = (values) => {
     let {company, email, phone, website,houseNumber, street, city, state, zipcode} = values;
@@ -142,7 +199,7 @@ export const createVendor = (values) => {
     };
     return async dispatch => {
         const res = await axios.post('/api/vendors', data);
-        console.log("res",res);
+        //console.log("res",res);
         return dispatch({ type: CREATE_VENDOR, payload: res });
     }
 };
@@ -150,36 +207,31 @@ export const createVendor = (values) => {
 export const fetchVendors = () => {
     return async dispatch => {
         const res = await axios.get('/api/vendors');
-        console.log("res",res);
+        //console.log("res",res);
         return dispatch({ type: FETCH_VENDORS, payload: res });
     }
-}
+};
 
 
 export const editVendor = (id) => {
     return async dispatch => {
         const res = await axios.get(`/api/vendors/edit/${id}`);
-        console.log("response",res);
+        //console.log("response",res);
         let {company,email,phone,address,website} = res.data;
         let {houseNumber, street, city, state, zipcode} = address;
         const editValue = {company,email,phone, houseNumber, street, city, state, zipcode, website};
         return dispatch({ type: EDIT_VENDOR, payload: editValue });
     }
-}
+};
 
 export const fetchVendor = (id) => {
     return async dispatch => {
         const res = await axios.get(`/api/vendors/${id}`);
         return dispatch({type: FETCH_VENDOR, payload: res});
     }
-}
+};
 
-export const fetchJob = (id) => {
-    return async dispatch => {
-        const res = await axios.get(`/api/jobs/${id}`);
-        return dispatch({type: FETCH_JOB, payload: res});
-    }
-}
+
 
 
 

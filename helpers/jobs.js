@@ -96,15 +96,38 @@ exports.updateJob = function(req, res) {
 };
 
 exports.deleteJob = function(req, res) {
-
-    db.Job
-        .remove({ _id: req.body })
-        .then(function() {
-            res.json({ message: "We Deleted It!" });
+    const id = req.params.jobId;
+    db.Job.findOne({_id: id}, function(err, job){
+        if(err) console.error(err);
+        db.Vendor.findOneAndUpdate({jobs: {$in: [id]}},{$pull: {jobs:id}}, function(err, unaffectedRecord){
+            if(err) console.error(err);
+            console.log("Number Affected:", unaffectedRecord);
+            db.Client.findOneAndUpdate({jobs: {$in: [id]}}, {$pull: {jobs: id}}, function(err,unaffectedRecord){
+                if(err) console.error(err);
+                console.log("Number Affected:", unaffectedRecord);
+                job.remove(function(err){
+                    if(err){
+                        console.error(err);
+                    } else {
+                        console.log("Deleted and Records Updated! Yay!");
+                        db.Job.find(function(err, jobs){
+                            if(err) console.error(err);
+                            res.json(jobs);
+                        })
+                    }
+                })
+            })
         })
-        .catch(function(err) {
-            res.send(err);
-        });
+    });
+    // db.Job
+    //     .remove({ _id: req.body })
+    //     .then(function() {
+    //         db.Vendor.findOne({_id: re})
+    //         res.json({ message: "We Deleted It!" });
+    //     })
+    //     .catch(function(err) {
+    //         res.send(err);
+    //     });
 };
 
 module.exports = exports;
