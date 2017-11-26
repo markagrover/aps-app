@@ -11,7 +11,7 @@ router
 router
     .route("/edit/:vendorId")
     .get(helpers.getVendorOnly)
-    // .put(helpers.updateVendor)
+    .put(helpers.updateVendor)
     // .delete(helpers.deleteVendor);
 router
     .route("/:vendorId")
