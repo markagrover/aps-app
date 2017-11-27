@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Button from 'react-toolbox/lib/button/Button';
 import NewJobForm from '../components/forms/Job/New';
 import JobRoll from '../components/Jobs/JobRoll';
+import Client from '../components/Client/ClientDetails';
 
 
 class SingleClientView extends Component {
@@ -15,21 +16,10 @@ class SingleClientView extends Component {
             let client = this.props.client;
             return (
                 <div>
-                    <li style={{
-                        border: '1px solid black',
-                        borderRadius: '10px',
-                        padding: '10px',
-                        margin: '10px',
-                        listStyle: 'none'
-                    }}>
-                        <p>Client Name: {client.fName + ' ' + client.lName}</p>
-                        <p>Client Email: {client.email}</p>
-                        <p>Client Phone: {client.phone}</p>
-                        <p>Client Address: {`${client.address.houseNumber} ${client.address.street} ${client.address.city}, ${client.address.state}`}</p>
-                        <Button/>
-                        <Button data-id={client._id} icon='edit' label='EDIT' flat primary />
-                        <Button data-id={client._id} icon='delete' label='DELETE' flat primary />
-                    </li>
+                    <Client {...client} actions={{
+                        edit:<Button data-id={client._id} icon='edit' label='EDIT' flat primary />,
+                        delete:<Button data-id={client._id} icon='delete' label='DELETE' flat primary />,
+                    }} />
                 </div>
 
             )

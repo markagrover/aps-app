@@ -14,7 +14,6 @@ const MGAppBar = ({location, history, menuIconOnClick}) => (
     <AppBar title='React Toolbox' onLeftIconClick={menuIconOnClick} leftIcon='menu' rightIcon={<GithubIcon />}>
         <Navigation type='horizontal'>
             <LinkWrap label={'HOME'} onClick={(location) => history.push('/')}></LinkWrap>
-            <LinkWrap label={'JOBS'} onClick={(location) => history.push('/jobs')}></LinkWrap>
             <LinkWrap label={'CLIENTS'} onClick={(location) => history.push('/clients')}></LinkWrap>
             <LinkWrap label={'Vendors'} onClick={(location) => history.push('/vendors')}></LinkWrap>
         </Navigation>

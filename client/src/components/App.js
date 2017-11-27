@@ -37,16 +37,9 @@ class App extends Component {
                         "/": () => <h1>Landing...</h1>,
                         "/clients": ClientsView,
                         "/vendors": Vendors,
-                        "/jobs": Jobs,
-                        "/jobs/new": NewJobForm,
-                        "/vendors/new": NewVendorForm,
-                        "/clients/new": NewClientForm,
-                        "/clients/:clientId": ClientView,
                         "/vendors/:vendorId": VendorView,
-                        "/jobs/:jobId": JobView,
-                        "/clients/edit/:clientId": EditClientsView,
-                        "/jobs/edit/:jobId": EditJobView,
-                        "/vendors/edit/:vendorId": EditVendorsView,}} />
+
+                    }} />
             }/>
       </BrowserRouter>
     );

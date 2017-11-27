@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 import Button from'react-toolbox/lib/button/Button';
+import Job from './Job';
 
 class Jobs extends Component {
     componentWillMount(){
@@ -14,9 +15,11 @@ class Jobs extends Component {
 
     }
     async onViewJob(e){
-        const target = e.target.dataset.id;
-        await this.props.fetchJob(target);
-        this.props.history.push(`/jobs/${target}`);
+        const vid = e.target.dataset.vid;
+        const cid = e.target.dataset.cid;
+        const jid = e.target.dataset.jid;
+        await this.props.fetchJob(jid);
+        this.props.history.push(`/vendors/${vid}?showJob=true&jobId=${jid}&clientId=${cid}`);
     }
    async onDelete(e){
         const id = e.target.dataset.id;
@@ -26,20 +29,12 @@ class Jobs extends Component {
     renderJobs(){
         if(this.props.jobs){
             return this.props.jobs.map((job, i) => {
+            const actions = {
+        edit: '',
+        view: <Button onClick={this.onViewJob.bind(this) } data-id={job._id} label={'VIEW JOB'}/>
+    };
                 return (
-                    <li key={i} style={{
-                        border: '1px solid black',
-                        borderRadius: '10px',
-                        padding: '10px',
-                        margin: '10px',
-                        listStyle: 'none'
-                    }}>
-                        <p>Job Type: {job.type}</p>
-
-                        <Button onClick={this.onEdit.bind(this)} data-id={job._id} icon='edit' label='EDIT' flat primary />
-                        <Button onClick={this.onDelete.bind(this)} data-id={job._id} icon='delete' label='DELETE' flat primary />
-                        <Button onClick={this.onViewJob.bind(this) } data-id={job._id} label={'VIEW JOB'}/>
-                    </li>
+                    <Job job={job} actions={actions}/>
                 );
             })
         }

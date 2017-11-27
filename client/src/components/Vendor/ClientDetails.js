@@ -34,13 +34,15 @@ class ShowClient extends Component {
     };
 
   render() {
+
     const label = !this.props.addJob ? "ADD JOB" : "CANCEL";
+    const isHidden = this.props.addJob ? {display: 'none'} : {};
     if (this.props.showClient) {
       const { fName, lName, address, phone, email, _id } = this.props.client;
       return (
         <Card style={{ width: "80%" }}>
           <CardTitle title={`${fName} ${lName}`} subtitle={`${email}`} />
-          <CardText>
+          <CardText style={isHidden}>
 
             <p>
               PHONE: <span>{`${phone}`}</span>
@@ -51,8 +53,8 @@ class ShowClient extends Component {
               >{`${address.houseNumber} ${address.street} ${address.city}, ${address.state}`}</span>
             </p>
           </CardText>
-          <CardTitle subtitle={`Jobs`} />
-          <CardText>
+          <CardTitle style={isHidden} subtitle={`Jobs`} />
+          <CardText style={isHidden}>
             <JobRoll
               getJob={this.props.getJob}
               showJobs={this.props.showJobs}

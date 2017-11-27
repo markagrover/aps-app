@@ -27,7 +27,7 @@ const vendorSource = async () => {
   const res = await axios.get('/api/vendors');
   console.log("RES=>",res);
   return res.data.map((vendor) => ({value: vendor._id, label: vendor.company}));
-}
+};
 
 let UpdateVendor = (props) => (
   <form

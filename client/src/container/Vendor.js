@@ -13,6 +13,9 @@ import ListSubheader from "react-toolbox/lib/list/ListSubHeader";
 import ListItem from "react-toolbox/lib/list/ListItem";
 import ListDivider from "react-toolbox/lib/list/ListDivider";
 import Dropdown from "react-toolbox/lib/dropdown/Dropdown";
+import Layout from 'react-toolbox/lib/layout/Layout';
+import Panel from 'react-toolbox/lib/layout/Panel';
+import queryString from 'query-string';
 
 const VendorDetails = ({ vendor }) => {
   const { company, email, phone, website, address } = vendor;
@@ -170,7 +173,8 @@ class SingleVendorView extends Component {
             addClient: false,
             vendor: this.props.vendor,
             job: this.props.job,
-            client: this.props.client
+            client: this.props.client,
+            showClient: true
         });
     }
 
@@ -181,7 +185,10 @@ class SingleVendorView extends Component {
   }
  async toggleAddClient(){
       await this.setState({
-          addClient: !this.state.addClient
+          addClient: !this.state.addClient,
+          editJob: false,
+          editClient: false,
+          showClient: false
       });
       this.props.fetchVendor(this.props.match.params.vendorId);
   }
@@ -203,53 +210,84 @@ class SingleVendorView extends Component {
     if (this.state.vendor) {
       console.log("PROPS from Vendor=>", this.state);
       return (
-        <div>
-          <VendorDetails vendor={this.state.vendor.vendor} />
-          <List ripple>
-            <ListSubheader caption={"Vendor's Clients"} />
-              <Button onClick={this.toggleAddClient.bind(this)} label={"New Client"}/>
-            <ClientRoll2
-              viewClient={this.viewClient.bind(this)}
-              showClients={this.state.showClients}
-              clients={this.state.vendor.clients}
-            />
-          </List>
+        <Layout>
+            <Panel>
+                <div style={{
+                    width: '90%',
+                    margin: '0 auto',
+                    display: 'flex-column',
+                    justifyContent: 'space-around'
+                }}>
+                    <div style={{
+                        flex: '1'
+                    }}>
+                        <VendorDetails vendor={this.state.vendor.vendor} />
+                        <List ripple>
+                            <ListSubheader caption={"Vendor's Clients"} />
+                            <Button onClick={this.toggleAddClient.bind(this)} label={"New Client"}/>
+                            <ClientRoll2
+                                viewClient={this.viewClient.bind(this)}
+                                showClients={this.state.showClients}
+                                clients={this.state.vendor.clients}
+                            />
+                        </List>
+                    </div>
+                    <div style={{
+                        flex: '1'
+                    }}>
+                        <Client
+                            editJobSubmit={this.submitEditJob.bind(this)}
+                            newClientSubmit={this.submitNewClient.bind(this)}
+                            editClientSubmit={this.submitEditClient.bind(this)}
+                            onToggleEditClient={this.toggleEditClient.bind(this)}
+                            onToggleEditJob={this.toggleEditJob.bind(this)}
+                            onToggleAddClient={this.toggleAddClient.bind(this)}
+                            job={this.state.job}
+                            showJob={this.state.showJob}
+                            getJob={this.getJob.bind(this)}
+                            showJobs={this.state.showClientJobs}
+                            onAddJob={this.onAddJob.bind(this)}
+                            client={this.state.client}
+                            addJob={this.state.addJob}
+                            newJobSubmit={this.submitNewJob.bind(this)}
+                            showClient={this.state.showClient}
+                            addClient={this.state.addClient}
+                            editClient={this.state.editClient}
+                            editJob={this.state.editJob}
+                            deleteJob={this.deleteJob.bind(this)}
+                            deleteClient={this.deleteClient.bind(this)}
+                        />
+                    </div>
+                </div>
 
-          <JobRoll
-            showJobs={this.state.showJobs}
-            jobs={this.state.vendor.vendor.jobs}
-            getJob={() => ('hey')}
-          />
-          <Client
-            editJobSubmit={this.submitEditJob.bind(this)}
-            newClientSubmit={this.submitNewClient.bind(this)}
-            editClientSubmit={this.submitEditClient.bind(this)}
-            onToggleEditClient={this.toggleEditClient.bind(this)}
-            onToggleEditJob={this.toggleEditJob.bind(this)}
-            onToggleAddClient={this.toggleAddClient.bind(this)}
-            job={this.state.job}
-            showJob={this.state.showJob}
-            getJob={this.getJob.bind(this)}
-            showJobs={this.state.showClientJobs}
-            onAddJob={this.onAddJob.bind(this)}
-            client={this.state.client}
-            addJob={this.state.addJob}
-            newJobSubmit={this.submitNewJob.bind(this)}
-            showClient={this.state.showClient}
-            addClient={this.state.addClient}
-            editClient={this.state.editClient}
-            editJob={this.state.editJob}
-            deleteJob={this.deleteJob.bind(this)}
-            deleteClient={this.deleteClient.bind(this)}
-          />
-        </div>
+
+
+          </Panel>
+        </Layout>
       );
     } else {
       return <h5>LOADING...</h5>;
       // refactor this todo
     }
   }
+   async componentWillMount(){
+      console.log("PROPS from --",queryString.parse(this.props.location.search));
+      const configs = queryString.parse(this.props.location.search);
+      if(configs.showClient && configs.clientId){
+         await this.props.fetchClient(configs.clientId);
+          this.setState({
+              showClient: true,
+              client: this.props.client,
+              activeClient: configs.clientId
+          });
+          if (this.props.client.jobs) {
+              this.setState({ showClientJobs: true });
+          }
+      }
+
+  }
   async componentDidMount() {
+
     if (!this.state.vendor) {
       await this.props.fetchVendor(this.props.match.params.vendorId);
      // await this.props.fetchVendor(this.props.match.params.vendorId);

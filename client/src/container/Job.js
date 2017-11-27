@@ -1,42 +1,58 @@
 import React, { Component } from 'react';
 import * as actions from '../actions';
 import { connect } from 'react-redux';
+import Card from 'react-toolbox/lib/card/Card';
+import CardActions from 'react-toolbox/lib/card/CardActions';
+import CardText from 'react-toolbox/lib/card/CardText';
 
 class SingleJobView extends Component {
+    constructor(props){
+        super(props);
+
+        this.renderJobDetails = this.renderJobDetails.bind(this);
+        this.renderActions = this.renderActions.bind(this);
+    }
     state = {
         jobs: []
     };
+    renderActions(){
+        if(this.props.actions){
+            const {actions} = this.props;
+            const keys = Reflect.ownKeys(actions);
+            return keys.map((key,i) => {
+                if(actions[key]){
+                    return actions[key];
+                }
+            })
+        }
+    }
     renderJobDetails(){
         if(this.props.job){
             let job = this.props.job;
             return (
-                <div>
-                    <li style={{
-                        border: '1px solid black',
-                        borderRadius: '10px',
-                        padding: '10px',
-                        margin: '10px',
-                        listStyle: 'none'
-                    }}>
+                <Card>
+                    <CardText>
                         <p>Type {job.type}</p>
-
-                    </li>
-                </div>
-
+                        <p>Type {job.startDate}</p>
+                        <p>Type {job.completed}</p>
+                    </CardText>
+                    <CardActions>
+                        {this.renderActions()}
+                    </CardActions>
+                </Card>
             )
         } else {
-            this.props.fetchJob(this.props.match.params.jobId);
+
         }
     }
 
     render(){
         return (
             <div>
-                <h2>Job View</h2>
                 {this.renderJobDetails()}
             </div>
         );
     }
 }
 
-export default connect(({job}) => ({job}),actions)(SingleJobView);
+export default SingleJobView;
