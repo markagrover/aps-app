@@ -1,23 +1,32 @@
 import axios from 'axios';
 import {
     FETCH_TEST,
-    FETCH_TODOS,
     FETCH_USER,
-    FETCH_CLIENTS,
     FETCH_CLIENT,
-    DELETE_CLIENT,
-    DELETE_JOB,
-    UPDATE_CLIENT,
-    CREATE_CLIENT ,
-    EDIT_CLIENT,
-    CREATE_VENDOR,
-    FETCH_VENDORS,
-    EDIT_VENDOR,
     EDIT_JOB,
     FETCH_VENDOR,
-    CREATE_JOB,
     FETCH_JOB,
-    FETCH_JOBS
+
+    FETCH_TODOS,
+    FETCH_CLIENTS,
+    FETCH_VENDORS,
+    FETCH_JOBS,
+
+    CREATE_CLIENT,
+    CREATE_VENDOR,
+    CREATE_JOB,
+
+    DELETE_CLIENT,
+    DELETE_JOB,
+    DELETE_VENDOR,
+
+    UPDATE_CLIENT,
+    UPDATE_VENDOR,
+    UPDATE_JOB,
+
+    EDIT_CLIENT,
+    EDIT_VENDOR
+
 } from './types';
 
 export const fetchUser = () => async dispatch => dispatch({ type: FETCH_USER, payload: await axios.get('/api/current_user') });
@@ -89,26 +98,30 @@ export const editClient = (id) => {
     return async dispatch => {
         const res = await axios.get(`/api/clients/${id}`);
         //console.log("res",res);
-        let {fName,lName,email,phone,address} = res.data;
+        let {_id, fName,lName,email,phone,address} = res.data;
         let {houseNumber, street, city, state, zipcode} = address;
-        const editValue = {fName,lName,email,phone, houseNumber, street, city, state, zipcode};
+        const editValue = {_id, fName,lName,email,phone, houseNumber, street, city, state, zipcode};
         return dispatch({ type: EDIT_CLIENT, payload: editValue });
     }
 };
 
-export const updateClient = (values, id) => {
+export const updateClient = (values) => {
     return async dispatch => {
-        const res = await axios.get('/api/clients');
-        //console.log("res",res);
-        return dispatch({ type: UPDATE_CLIENT, payload: res });
+        const {fName, lName, email, phone, houseNumber, street,city,state,zipcode} = values;
+        const newVals = {fName, lName, email, phone};
+        newVals.address = {houseNumber, street,city,state,zipcode};
+        console.log("values updating client ",newVals);
+        const res = await axios.put(`/api/clients/${values._id}`, newVals);
+        console.log("res updating client",res.data);
+        return dispatch({ type: UPDATE_CLIENT, payload: res.data });
     }
 };
 
 export const deleteClient = (id) => {
     return async dispatch => {
-        const res = await axios.delete('/api/clients',id);
+        const res = await axios.delete(`/api/clients/${id}`);
         //console.log("res",res);
-        return dispatch({ type: DELETE_CLIENT, payload: res });
+        return dispatch({ type: DELETE_CLIENT, payload: res.data });
     }
 };
 
@@ -145,17 +158,22 @@ export const editJob = (id) => {
         let restructuredRes = {};
         const res = await axios.get(`/api/jobs/${id}`);
         Object.assign(restructuredRes, res.data, res.data.address);
+        Object.assign(restructuredRes, {_id: res.data._id});
         //console.log("res",restructuredRes);
 
         return dispatch({ type: EDIT_JOB, payload: restructuredRes });
     }
 };
 
-export const updateJob = (values, id) => {
+export const updateJob = (values) => {
     return async dispatch => {
-        const res = await axios.get('/api/jobs');
-        //console.log("res",res);
-        return dispatch({ type: UPDATE_CLIENT, payload: res });
+        const { houseNumber, street,city,state,zipcode, startDate, completed, type} = values;
+        const newVals = {startDate, completed, type};
+        newVals.address = {houseNumber, street,city,state,zipcode};
+        console.log("values updating client ",newVals);
+        const res = await axios.put(`/api/jobs/${values._id}`,newVals);
+
+        return dispatch({ type: UPDATE_JOB, payload: res.data });
     }
 };
 
@@ -217,9 +235,9 @@ export const editVendor = (id) => {
     return async dispatch => {
         const res = await axios.get(`/api/vendors/edit/${id}`);
         //console.log("response",res);
-        let {company,email,phone,address,website} = res.data;
+        let {company,email,phone,address,website, _id} = res.data;
         let {houseNumber, street, city, state, zipcode} = address;
-        const editValue = {company,email,phone, houseNumber, street, city, state, zipcode, website};
+        const editValue = {_id, company,email,phone, houseNumber, street, city, state, zipcode, website};
         return dispatch({ type: EDIT_VENDOR, payload: editValue });
     }
 };
@@ -231,6 +249,22 @@ export const fetchVendor = (id) => {
     }
 };
 
+export const updateVendor = (values) => {
+    return async dispatch => {
+        console.log("vendor values-->",values);
+        const res = await axios.put(`/api/vendors/${values._id}`, values);
+        console.log("res",res);
+        return dispatch({ type: UPDATE_VENDOR, payload: res.data });
+    }
+};
+
+export const deleteVendor = (id) => {
+    return async dispatch => {
+        const res = await axios.delete(`/api/vendors/${id}`);
+        //console.log("res",res);
+        return dispatch({ type: DELETE_VENDOR, payload: res });
+    }
+};
 
 
 

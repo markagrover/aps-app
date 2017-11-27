@@ -20,7 +20,7 @@ const renderSelectField = ({ input, meta, source, ...props }) => (
 );
 
 class NewClient extends Component {
-  state = { vendors: [], addClient: false };
+  state = { vendors: []};
   async componentWillMount() {
     await this.props.fetchVendors();
     const vendors = this.props.vendors.map(vendor => ({
@@ -29,13 +29,8 @@ class NewClient extends Component {
     }));
     this.setState({ vendors });
   }
-  toggleForm() {
-    this.setState({
-      addClient: !this.state.addClient
-    });
-  }
+
   renderForm() {
-    if (this.state.addClient) {
       return (
         <form onSubmit={this.props.handleSubmit((values) => this.props.onSubmit(values))}
           style={{
@@ -118,27 +113,11 @@ class NewClient extends Component {
                 raised
                 primary
                 type="submit" />
-            <Button
-              onClick={this.toggleForm.bind(this)}
-              icon="cancel"
-              label="Cancel"
-              raised
-              primary
-            />
           </div>
         </form>
       );
-    } else {
-      return (
-        <Button
-          flat
-          primary
-          onClick={this.toggleForm.bind(this)}
-          label={"Add Client"}
-        />
-      );
     }
-  }
+
   render() {
     return <div>{this.renderForm()}</div>;
   }

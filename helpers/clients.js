@@ -51,6 +51,7 @@ exports.getClient = function(req, res) {
 
 exports.updateClient = function(req, res) {
   // new true returns updated record
+    console.log("req.body-->", req.body);
   let updatedAddressValues;
   const clientKeys = Reflect.ownKeys(req.body);
   const updatedValues = clientKeys.reduce((accu, currentKey) => {
@@ -59,7 +60,9 @@ exports.updateClient = function(req, res) {
     }
     return accu;
   }, {});
+  console.log("UPDATED VALUES",updatedValues);
   if (updatedValues.address) {
+    console.log("updatedValues.address",updatedValues.address);
     const addressKeys = Reflect.ownKeys(updatedValues.address);
     updatedAddressValues = addressKeys.reduce((accu, currentKey) => {
       if (updatedValues.address[currentKey]) {
@@ -74,7 +77,12 @@ exports.updateClient = function(req, res) {
       console.error(err);
     } else {
       if (updatedValues /*could be null if all we passed was address data*/) {
-        client = Object.assign(client, updatedValues);
+        const updatedKeys = Reflect.ownKeys(updatedValues);
+        updatedKeys.forEach(key => {
+          if(updatedValues[key]){
+            client[key] = updatedValues[key];
+          }
+        });
       }
       if (updatedAddressValues) {
         client.address = Object.assign(client.address, updatedAddressValues);

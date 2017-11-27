@@ -79,6 +79,7 @@ exports.getVendorOnly = function(req, res) {
 };
 
 exports.updateVendor = function(req, res) {
+    console.log("WORKING...",req.body);
     let updatedAddressValues;
     const keys = Reflect.ownKeys(req.body);
     const updateValues = keys.reduce((accu, current) => {// build up an object of the data
@@ -108,13 +109,11 @@ exports.updateVendor = function(req, res) {
             keys.forEach((key) => {
                 vendor[key] = updateValues[key];
             });
-            //vendor = Object.assign(vendor, updateValues); this works too
+            //vendor = Object.assign(vendor, updateValues); Bad Here , Think about it. DIF Library
 
             if(updatedAddressValues){
                 const addressKeys = Reflect.ownKeys(updatedAddressValues);// set data on object
-                // addressKeys.forEach((key) => {
-                //     vendor.address[key] = updatedAddressValues[key];
-                // }); // if nested data over write data
+
                 vendor.address = Object.assign(vendor.address, updatedAddressValues);// see I proved it!
             }
             vendor.save(function(err, updatedRecord){// save record

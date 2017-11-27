@@ -13,8 +13,10 @@ class Clients extends Component {
         this.props.history.push(`/clients/edit/${id}`);
 
     }
-    onDelete(e){
-        console.log('ID=>',e.target.dataset.id);
+    async onDelete(e){
+         const id = e.target.dataset.id;
+         await this.props.deleteClient(id);
+         this.props.fetchClients();
     }
     async onViewClient(e){
         const id = e.target.dataset.id;
@@ -38,7 +40,7 @@ class Clients extends Component {
                         <p>Client Address: {`${client.address.houseNumber} ${client.address.street} ${client.address.city}, ${client.address.state}`}</p>
 
                         <Button onClick={this.onEdit.bind(this)} data-id={client._id} icon='edit' label='EDIT' flat primary />
-                        <Button onClick={this.onDelete} data-id={client._id} icon='delete' label='DELETE' flat primary />
+                        <Button onClick={this.onDelete.bind(this)} data-id={client._id} icon='delete' label='DELETE' flat primary />
                         <Button onClick={this.onViewClient.bind(this) } data-id={client._id} label={'VIEW CLIENT'}/>
 
                     </li>

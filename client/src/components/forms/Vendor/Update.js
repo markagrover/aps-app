@@ -11,6 +11,10 @@ const renderInputField = ({ input, meta, ...props }) => (
   <Input {...input} {...props} error={meta.touched && meta.error} />
 );
 
+const renderHiddenInputField = ({ input, meta, ...props }) => (
+    <Input {...input} {...props} error={meta.touched && meta.error} />
+);
+
 const renderSelectField = ({ input, meta, source, ...props }) => (
   <Dropdown /*due to Dropdowns required proptype for error is String huh....*/
     source={source}
@@ -24,16 +28,12 @@ const vendorSource = async () => {
   console.log("RES=>",res);
   return res.data.map((vendor) => ({value: vendor._id, label: vendor.company}));
 }
-// vsRequest();
-// const vendorSource = [
-//   { value: "none", label: "NONE" },
-//   { value: "apollo", label: "APOLLO" },
-//   { value: "pnp", label: "POOL_N_PLAY" },
-//   { value: "pplus", label: "POOLS_PLUS" }
-// ];
 
-let UpdateVendor = () => (
+let UpdateVendor = (props) => (
   <form
+      onSubmit={props.handleSubmit(values =>
+          props.onSubmit(values)
+      )}
     style={{
       width: "50%",
       margin: "0 auto"
@@ -75,6 +75,9 @@ let UpdateVendor = () => (
     <div>
       <Field name="website" component={renderInputField} label="WebSite" />
     </div>
+    <div hidden>
+      <Field name="_id" component={renderHiddenInputField} label="" />
+    </div>
     <div>
       <Button icon="send" label="Submit" raised primary type="submit" />
     </div>
@@ -82,7 +85,7 @@ let UpdateVendor = () => (
 );
 
 UpdateVendor = reduxForm({
-  form: "newVendor"
+  form: "editVendor"
 })(UpdateVendor);
 
 export default connect(

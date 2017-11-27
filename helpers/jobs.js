@@ -53,6 +53,7 @@ exports.getJob = function(req, res) {
   db.Job
     .findById(req.params.jobId)
     .then(function(job) {
+        console.log("THIS IS JOB",job);
       res.json(job);
     })
     .catch(function(err) {
@@ -62,6 +63,7 @@ exports.getJob = function(req, res) {
 
 exports.updateJob = function(req, res) {
   // new true returns updated record
+    console.log('body',req.body);
   let updatedAddressValues;
   const jobKeys = Reflect.ownKeys(req.body);
   const updatedValues = jobKeys.reduce((accu, currentKey) =>{
@@ -70,9 +72,9 @@ exports.updateJob = function(req, res) {
       }
       return accu;
     },{});
-
+    console.log('updatedValues',updatedValues);
   if(updatedValues.address){
-
+console.log('updatedValues.address',updatedValues.address);
       const addressKeys = Reflect.ownKeys(updatedValues.address);
       updatedAddressValues = addressKeys.reduce((accu, currentKey) => {
           if(updatedValues.address[currentKey]){
@@ -82,12 +84,20 @@ exports.updateJob = function(req, res) {
       },{});
       delete updatedValues.address;// remove key from object
   }
+  console.log("ID-->",req.params.jobId);
   db.Job.findOne({_id: req.params.jobId}, function(err, job){
       if(err){
           console.error(err);
       } else {
           if(updatedValues/*could be null if all we passed was address data*/){
-              job = Object.assign(job, updatedValues);
+              const keys = Reflect.ownKeys(updatedValues);
+              keys.forEach(key => {
+                  if(updatedValues[key]){
+                      job[key] = updatedValues[key];
+                  }
+              });
+              console.log('JOB',job,"VALS",updatedValues);
+              // job = Object.assign(job, updatedValues); not good
           }
 
           if(updatedAddressValues){

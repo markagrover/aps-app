@@ -83,7 +83,8 @@ class SingleVendorView extends Component {
     showClientJobs: false,
     clients: [],
     activeJob: [],
-    jobs: []
+    jobs: [],
+    job: {}
   };
   async viewClient(id) {
     await this.props.fetchClient(id);
@@ -98,10 +99,28 @@ class SingleVendorView extends Component {
   }
   async getJob(id) {
     await this.props.fetchJob(id);
-    await this.setState({ showJob: true, job: this.props.job });
+    this.setState({ showJob: true, job: this.props.job });
   }
+  async deleteClient(id){
+      await this.props.deleteClient(id);
+      await this.props.fetchVendor(this.props.match.params.vendorId);
+      await this.props.fetchClients();
+      this.setState({
+          vendor: this.props.vendor,
+          showClient: false
+      });
 
-  submitNewClient() {}
+    }
+    async deleteJob(id){
+        await this.props.deleteJob(id);
+        await this.props.fetchVendor(this.props.match.params.vendorId);
+        await this.props.fetchClient(this.state.client._id);
+        this.setState({
+            vendor: this.props.vendor,
+            client: this.props.client,
+            showJob: false
+        });
+    }
 
   async submitNewJob(values) {
     const vendorId = this.props.match.params.vendorId; // get vendor Id
@@ -115,11 +134,71 @@ class SingleVendorView extends Component {
       client: this.props.client
     });
   }
+
+    async submitEditJob(values) {
+        const vendorId = this.props.match.params.vendorId; // get vendor Id
+        await this.props.updateJob(values);
+        await this.props.fetchVendor(vendorId);
+        await this.props.fetchClient(this.state.activeClient);
+        await this.props.fetchJob(values._id);
+        this.setState({
+            editJob: false,
+            vendor: this.props.vendor,
+            job: this.props.job,
+            client: this.props.client
+        });
+    }
+    async submitEditClient(values) {
+      console.log("values",values);
+        const vendorId = this.props.match.params.vendorId; // get vendor Id
+        await this.props.updateClient(values);
+        await this.props.fetchVendor(vendorId);
+        await this.props.fetchClient(this.state.activeClient);
+        this.setState({
+            editClient: false,
+            vendor: this.props.vendor,
+            job: this.props.job,
+            client: this.props.client
+        });
+    }
+    async submitNewClient(values) {
+        const vendorId = this.props.match.params.vendorId; // get vendor Id
+        await this.props.createClient(values);
+        await this.props.fetchVendor(vendorId);
+        await this.props.fetchClients();
+        this.setState({
+            addClient: false,
+            vendor: this.props.vendor,
+            job: this.props.job,
+            client: this.props.client
+        });
+    }
+
   onAddJob() {
     this.setState({
       addJob: !this.state.addJob
     });
   }
+ async toggleAddClient(){
+      await this.setState({
+          addClient: !this.state.addClient
+      });
+      this.props.fetchVendor(this.props.match.params.vendorId);
+  }
+   async toggleEditClient(e){
+        const id = e.target.dataset.id;
+       await this.props.editClient(id);
+        this.setState({
+            editClient: !this.state.editClient
+        });
+    }
+   async toggleEditJob(e){
+        const id = e.target.dataset.id;
+        await this.props.editJob(id);
+        this.setState({
+            editJob: !this.state.editJob
+        });
+    }
   renderOrFetchFirst() {
     if (this.state.vendor) {
       console.log("PROPS from Vendor=>", this.state);
@@ -128,6 +207,7 @@ class SingleVendorView extends Component {
           <VendorDetails vendor={this.state.vendor.vendor} />
           <List ripple>
             <ListSubheader caption={"Vendor's Clients"} />
+              <Button onClick={this.toggleAddClient.bind(this)} label={"New Client"}/>
             <ClientRoll2
               viewClient={this.viewClient.bind(this)}
               showClients={this.state.showClients}
@@ -141,6 +221,12 @@ class SingleVendorView extends Component {
             getJob={() => ('hey')}
           />
           <Client
+            editJobSubmit={this.submitEditJob.bind(this)}
+            newClientSubmit={this.submitNewClient.bind(this)}
+            editClientSubmit={this.submitEditClient.bind(this)}
+            onToggleEditClient={this.toggleEditClient.bind(this)}
+            onToggleEditJob={this.toggleEditJob.bind(this)}
+            onToggleAddClient={this.toggleAddClient.bind(this)}
             job={this.state.job}
             showJob={this.state.showJob}
             getJob={this.getJob.bind(this)}
@@ -150,6 +236,11 @@ class SingleVendorView extends Component {
             addJob={this.state.addJob}
             newJobSubmit={this.submitNewJob.bind(this)}
             showClient={this.state.showClient}
+            addClient={this.state.addClient}
+            editClient={this.state.editClient}
+            editJob={this.state.editJob}
+            deleteJob={this.deleteJob.bind(this)}
+            deleteClient={this.deleteClient.bind(this)}
           />
         </div>
       );
@@ -161,6 +252,7 @@ class SingleVendorView extends Component {
   async componentDidMount() {
     if (!this.state.vendor) {
       await this.props.fetchVendor(this.props.match.params.vendorId);
+     // await this.props.fetchVendor(this.props.match.params.vendorId);
       await this.setState({
         vendor: this.props.vendor
       });

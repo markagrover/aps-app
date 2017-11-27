@@ -32,7 +32,9 @@ class EditClient extends Component {
     }
     render() {
         return (
-            <form style={{
+            <form
+                onSubmit={this.props.handleSubmit((values) => this.props.onSubmit(values))}
+                style={{
                 width: '50%',
                 margin: '0 auto'
             }} className={'row'}>
@@ -101,6 +103,12 @@ class EditClient extends Component {
                         source={this.state.vendors}
                         component={renderSelectField}
                         label={"Vendor Rel"}
+                    />
+                </div>
+                <div hidden>
+                    <Field
+                        name="_id"
+                        component={renderInputField}
                     />
                 </div>
 

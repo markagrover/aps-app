@@ -108,6 +108,12 @@ class EditJob extends Component {
             label="Start Date"
           />
         </div>
+          <div hidden>
+              <Field
+                  name="_id"
+                  component={renderInputField}
+              />
+          </div>
 
         <div>
           <Button icon="send" label="Submit" raised primary type="submit" />
